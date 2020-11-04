@@ -1,4 +1,6 @@
-# reliquest
+# Reliquest
+
+A Vue.js prototype of the Reliquest fantasy card game.
 
 ## Project setup
 ```
