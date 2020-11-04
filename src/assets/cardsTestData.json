@@ -1,0 +1,82 @@
+[
+  {
+    "type": "Encounter",
+    "description": "This is an encounter!",
+    "image": "Encounter #1"
+  },
+  {
+    "type": "Encounter",
+    "description": "This is an encounter!",
+    "image": "Encounter #2"
+  },
+  {
+    "type": "Encounter",
+    "description": "This is an encounter!",
+    "image": "Encounter #3"
+  },
+  {
+    "type": "Encounter",
+    "description": "This is an encounter!",
+    "image": "Encounter #4"
+  },
+  {
+    "type": "Encounter",
+    "description": "This is an encounter!",
+    "image": "Encounter #5"
+  },
+  {
+    "type": "Encounter",
+    "description": "This is an encounter!",
+    "image": "Encounter #6"
+  },
+  {
+    "type": "Encounter",
+    "description": "This is an encounter!",
+    "image": "Encounter #7"
+  },
+  {
+    "type": "Encounter",
+    "description": "This is an encounter!",
+    "image": "Encounter #8"
+  },
+  {
+    "type": "Gold",
+    "description": "This is loot! It's GOOD!",
+    "image": "Loot #1"
+  },
+  {
+    "type": "Gold",
+    "description": "Oooh, oooh. Gold, ooooOOooh.",
+    "image": "Loot #2"
+  },
+  {
+    "type": "HP Potion",
+    "description": "Type HP Potion wild nonsense.",
+    "image": "Loot #3"
+  },
+  {
+    "type": "Rune",
+    "description": "You just got slapped by a type Rune.",
+    "image": "Loot #4"
+  },
+  {
+    "type": "Rune",
+    "description": "I was not that cute when I did not have no runes.",
+    "image": "Loot #5"
+  },
+  {
+    "type": "HP Potion",
+    "description": "The sky is turning red. Return to power draws near. Fall into me, the sky's crimson tears. Abolish the rules made of stone.",
+    "image": "Loot #6"
+  },
+  {
+    "type": "Fools Gold",
+    "description": "You dummy. You got fooled!",
+    "image": "Loot #7"
+  },
+  {
+    "type": "HP Potion",
+    "description": "Eat a submarine sandwich. Gain lots of hit points.",
+    "image": "Loot #8"
+  }
+]

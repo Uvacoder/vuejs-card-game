@@ -1,0 +1,14 @@
+:root {
+  --color-primary: black;
+  --color-secondary: whitesmoke;
+  --color-grayscale: lightgray;
+  --color-background: white;
+
+  --space-sm: 0.75rem;
+  --space: 1rem;
+  --space-md: 2rem;
+
+  --card-size: calc(350px - var(--space) * 2);
+
+  --font-primary: monospace;
+}

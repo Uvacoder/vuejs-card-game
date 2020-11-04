@@ -1,0 +1,29 @@
+/* Button */
+.button {
+  padding: var(--space-sm) var(--space-md);
+  background-color: var(--color-secondary);
+  border: 2px solid var(--color-primary);
+  border-radius: 0.125rem;
+  font-family: inherit;
+  font-size: inherit;
+  cursor: pointer;
+  box-shadow: rgba(0,0,0, 0.2) 0 2px 0;
+  touch-action: manipulation;
+}
+
+.button:disabled {
+  border-color: var(--color-grayscale);
+  border-style: dashed;
+  background-color: transparent;
+  cursor: not-allowed;
+}
+
+.button:active,
+.button:disabled {
+  transform: translateY(2px);
+  box-shadow: none;
+}
+
+.button.secondary {
+  background-color: var(--color-background);
+}
