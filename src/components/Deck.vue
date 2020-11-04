@@ -22,28 +22,28 @@
 </template>
 
 <script>
-  import Card from './Card';
+import Card from './Card.vue';
 
-  export default {
-    name: 'Deck',
-    components: { Card },
-    props: {
-      id: String,
-      cards: Array,
+export default {
+  name: 'Deck',
+  components: { Card },
+  props: {
+    id: String,
+    cards: Array,
+  },
+
+  methods: {
+    drawCard() {
+      this.$emit('draw', this.id);
     },
+  },
 
-    methods: {
-      drawCard() {
-        this.$emit('draw', this.id);
-      }
+  computed: {
+    activeCards() {
+      return this.cards.filter((card) => card.active);
     },
-
-    computed: {
-      activeCards() {
-        return this.cards.filter(card => card.active);
-      }
-    }
-  };
+  },
+};
 </script>
 
 <style scoped>

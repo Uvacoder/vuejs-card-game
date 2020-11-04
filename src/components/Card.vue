@@ -7,20 +7,20 @@
 </template>
 
 <script>
-  export default {
-    name: 'Card',
-    props: {
-      type: String,
-      image: String,
-      description: String,
-    },
+export default {
+  name: 'Card',
+  props: {
+    type: String,
+    image: String,
+    description: String,
+  },
 
-    computed: {
-      dataType() {
-        return this.type.replace(/\s+/g, '-').toLowerCase();
-      }
-    }
-  };
+  computed: {
+    dataType() {
+      return this.type.replace(/\s+/g, '-').toLowerCase();
+    },
+  },
+};
 </script>
 
 <style scoped>

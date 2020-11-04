@@ -1,5 +1,7 @@
 <template>
-  <header class="header">{{notification}}</header>
+  <header class="header">
+    {{ notification }}
+  </header>
   <main class="main">
     <div class="decks u-scroll-x">
       <Deck id="encounter" @draw="drawCard" :cards="encounter" />
@@ -7,12 +9,14 @@
     </div>
   </main>
   <footer class="footer">
-    <button @click="startNewQuest" class="button secondary">Start New Quest</button>
+    <button class="button secondary" @click="startNewQuest">
+      Start New Quest
+    </button>
   </footer>
 </template>
 
 <script>
-import Deck from './components/Deck';
+import Deck from './components/Deck.vue';
 
 export default {
   name: 'App',
@@ -23,7 +27,11 @@ export default {
       encounter: [],
       loot: [],
       notification: this.$notification.loading,
-    }
+    };
+  },
+
+  mounted() {
+    this.fetchCardData();
   },
 
   methods: {
@@ -31,28 +39,28 @@ export default {
       try {
         const response = await fetch('https://assets.codepen.io/225363/cardsTestData.json');
         const data = await response.json();
-        const cards = await data.map(card => Object.assign({ active: false }, card));
+        const cards = await data.map((card) => Object.assign(card, { active: false }));
 
-        this.encounter = cards.filter(({ type }) => type === "Encounter");
-        this.loot = cards.filter(({ type }) => type !== "Encounter");
+        this.encounter = cards.filter(({ type }) => type === 'Encounter');
+        this.loot = cards.filter(({ type }) => type !== 'Encounter');
         this.startNewQuest();
-      } catch(error) {
+      } catch (error) {
         this.notification = this.$notification.error;
       }
     },
 
     drawCard(type) {
       this.notification = this.$notification[type];
-      return this[type].find(card => {
+      return this[type].find((card) => {
         if (card.active) {
-          return
+          return;
         }
         return card.active = true;
       });
     },
 
     deactivateDeck(deck) {
-      deck.forEach(card => card.active = false);
+      deck.forEach((card) => card.active = false);
     },
 
     shuffleDeck(deck) {
@@ -64,13 +72,9 @@ export default {
       this.shuffleDeck(this.encounter);
       this.shuffleDeck(this.loot);
       this.notification = this.$notification.start;
-    }
+    },
   },
-
-  mounted() {
-    this.fetchCardData();
-  }
-}
+};
 </script>
 
 <style>
