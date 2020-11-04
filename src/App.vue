@@ -50,13 +50,12 @@ export default {
     },
 
     drawCard(type) {
-      this.notification = this.$notification[type];
-      return this[type].find((card) => {
-        if (card.active) {
-          return;
+      this[type].find((card) => {
+        if (!card.active) {
+          return card.active = true;
         }
-        return card.active = true;
       });
+      this.notification = this.$notification[type];
     },
 
     deactivateDeck(deck) {
@@ -64,8 +63,8 @@ export default {
     },
 
     shuffleDeck(deck) {
-      this.deactivateDeck(deck);
       deck.sort(() => Math.random() - 0.5);
+      this.deactivateDeck(deck);
     },
 
     startNewQuest() {
