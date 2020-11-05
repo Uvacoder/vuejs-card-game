@@ -11,4 +11,10 @@
   --card-size: calc(350px - var(--space) * 2);
 
   --font-primary: monospace;
+
+  --duration-sm: 150ms;
+  --duration: 200ms;
+  --duration-md: 400ms;
+
+  --ease-out: cubic-bezier(0.25, 1, 0.5, 1);
 }
