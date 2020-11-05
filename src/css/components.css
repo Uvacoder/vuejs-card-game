@@ -2,12 +2,12 @@
 .button {
   padding: var(--space-sm) var(--space-md);
   background-color: var(--color-secondary);
-  border: 2px solid var(--color-primary);
+  border: var(--border-size) solid var(--border-color);
   border-radius: 0.125rem;
   font-family: inherit;
   font-size: inherit;
   cursor: pointer;
-  box-shadow: rgba(0,0,0, 0.2) 0 2px 0;
+  box-shadow: var(--shadow);
   touch-action: manipulation;
 }
 

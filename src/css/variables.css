@@ -1,20 +1,29 @@
 :root {
+  /* Colors */
   --color-primary: black;
   --color-secondary: whitesmoke;
   --color-grayscale: lightgray;
   --color-background: white;
 
+  /* Fonts */
+  --font-primary: monospace;
+
+  /* Transitions/Animations */
+  --duration-sm: 150ms;
+  --duration: 200ms;
+  --duration-md: 400ms;
+  --ease-in: cubic-bezier(0.32, 0, 0.67, 0);
+  --ease-out: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-in-out: cubic-bezier(0.83, 0, 0.17, 1);
+
+  /* Spacing */
   --space-sm: 0.75rem;
   --space: 1rem;
   --space-md: 2rem;
 
+  /* Decorators */
+  --border-size: 2px;
+  --border-color: var(--color-primary);
   --card-size: calc(350px - var(--space) * 2);
-
-  --font-primary: monospace;
-
-  --duration-sm: 150ms;
-  --duration: 200ms;
-  --duration-md: 400ms;
-
-  --ease-out: cubic-bezier(0.25, 1, 0.5, 1);
+  --shadow: rgba(0, 0, 0, 0.2) 0 2px 0;
 }
