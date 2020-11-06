@@ -5,7 +5,12 @@
   <main class="main">
     <transition name="fade" mode="out-in">
       <div v-if="settings" class="settings u-flow">
-        <Stepper id="players" label="How many are in the party?" />
+        <Stepper
+          id="players"
+          label="How many are in the party?"
+          :value="players"
+          @update="updatePlayers"
+        />
         <button class="button" @click="toggleSettingsDisplay">
           Submit
         </button>
@@ -43,7 +48,8 @@ export default {
     return {
       encounter: [],
       loot: [],
-      notification: this.$notification.loading,
+      notification: this.$notification.settings,
+      players: 1,
       settings: true
     };
   },
@@ -61,10 +67,13 @@ export default {
 
         this.encounter = cards.filter(({ type }) => type === "Encounter");
         this.loot = cards.filter(({ type }) => type !== "Encounter");
-        this.startNewQuest();
       } catch (error) {
         this.notification = this.$notification.error;
       }
+    },
+
+    deactivateDeck(deck) {
+      deck.forEach(card => (card.active = false));
     },
 
     drawCard(type) {
@@ -74,10 +83,6 @@ export default {
         }
       });
       this.notification = this.$notification[type];
-    },
-
-    deactivateDeck(deck) {
-      deck.forEach(card => (card.active = false));
     },
 
     shuffleDeck(deck) {
@@ -93,6 +98,16 @@ export default {
 
     toggleSettingsDisplay() {
       this.settings = !this.settings;
+
+      if (this.settings) {
+        this.notification = this.$notification.settings;
+      } else {
+        this.startNewQuest();
+      }
+    },
+
+    updatePlayers(value) {
+      this.players = value;
     }
   }
 };

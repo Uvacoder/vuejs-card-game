@@ -32,6 +32,10 @@
 export default {
   name: "Stepper",
   props: {
+    value: {
+      type: Number,
+      default: 1
+    },
     id: {
       type: String,
       required: true
@@ -52,7 +56,7 @@ export default {
 
   data() {
     return {
-      count: 1
+      count: this.value
     };
   },
 
@@ -64,11 +68,17 @@ export default {
 
   methods: {
     decrease() {
-      return this.count > this.min && this.count--;
+      this.count > this.min && this.count--;
+      return this.update();
     },
 
     increase() {
-      return this.count < this.max && this.count++;
+      this.count < this.max && this.count++;
+      return this.update();
+    },
+
+    update() {
+      this.$emit("update", this.count);
     }
   }
 };
