@@ -16,8 +16,8 @@
         </button>
       </div>
       <div v-else class="decks u-scroll-x">
-        <Deck id="encounter" @draw="drawCard" :cards="encounter" />
-        <Deck id="loot" @draw="drawCard" :cards="loot" />
+        <Deck id="encounter" @draw="drawCard" :players="players" :cards="encounter" />
+        <Deck id="loot" @draw="drawCard" :players="players" :cards="loot" />
       </div>
     </transition>
   </main>

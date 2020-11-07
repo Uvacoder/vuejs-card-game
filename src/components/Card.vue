@@ -4,12 +4,13 @@
     <div class="image">{{ image }}</div>
     <div class="description">{{ description }}</div>
 
-    <select>
-      <option>1</option>
-      <option>2</option>
-      <option>3</option>
-      <option>4</option>
-    </select>
+    <div v-if="lootCard" class="player-select">
+      <select>
+        <option v-for="(player, index) in players" :key="index">
+          Party Member {{ index + 1 }}
+        </option>
+      </select>
+    </div>
   </div>
 </template>
 
@@ -20,13 +21,18 @@ export default {
     description: String,
     image: String,
     type: String,
+    players: Number
   },
 
   computed: {
     dataType() {
       return this.type.replace(/\s+/g, "-").toLowerCase();
     },
-  },
+
+    lootCard() {
+      return this.type !== "Encounter";
+    }
+  }
 };
 </script>
 
@@ -37,8 +43,8 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: var(--card-size);
-  height: calc(var(--card-size) * 1.3);
+  width: var(--card-width);
+  height: var(--card-height);
   border: 2px solid black;
   border-radius: 0.125rem;
   background-color: whitesmoke;
@@ -79,6 +85,42 @@ export default {
   padding: var(--space);
   font-size: 1rem;
   line-height: 1.15;
+}
+
+.player-select {
+  position: relative;
+  width: 100%;
+}
+
+.player-select select {
+  appearance: none;
+  background-color: var(--color-secondary);
+  border: none;
+  border-top: 2px solid var(--color-primary);
+  padding: 0 1em 0 0;
+  width: 100%;
+  font-family: inherit;
+  font-size: inherit;
+  cursor: inherit;
+  line-height: inherit;
+  text-align: center;
+  padding: var(--space-xs) var(--space-sm);
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.player-select::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: var(--space-sm);
+  display: block;
+  width: 12px;
+  height: 8px;
+  background-color: var(--color-primary);
+  clip-path: polygon(100% 0%, 0 0%, 50% 100%);
+  transform: translateY(-50%);
+  pointer-events: none;
 }
 
 /* Data types */

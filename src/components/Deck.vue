@@ -1,7 +1,9 @@
 <template>
   <div :id="id" class="deck-container u-flow">
     <div class="deck u-flex-center">
-      <div class="deck-name">{{ id }}</div>
+      <div class="deck-name">
+        {{ id }}
+      </div>
       <transition-group name="card">
         <Card
           v-for="({ type, image, description }, index) in activeCards"
@@ -9,12 +11,13 @@
           :type="type"
           :image="image"
           :description="description"
+          :players="players"
           class="card"
         />
       </transition-group>
     </div>
-    <button class="button" @click="drawCard" :disabled="activeCards.length == cards.length">
-      {{ activeCards.length == cards.length ? "Empty" : "Draw" }}
+    <button class="button" :disabled="disabledButton" @click="$emit('draw', id)">
+      {{ buttonText }}
     </button>
   </div>
 </template>
@@ -26,19 +29,33 @@ export default {
   name: "Deck",
   components: { Card },
   props: {
-    id: String,
-    cards: Array
+    id: {
+      type: String,
+      default: null
+    },
+    cards: {
+      type: Array,
+      default: null
+    },
+    players: {
+      type: Number,
+      default: 1
+    }
   },
+
+  emits: ["draw"],
 
   computed: {
     activeCards() {
       return this.cards.filter(card => card.active);
-    }
-  },
+    },
 
-  methods: {
-    drawCard() {
-      this.$emit("draw", this.id);
+    buttonText() {
+      return this.disabledButton ? "Empty" : "Draw";
+    },
+
+    disabledButton() {
+      return this.activeCards.length == this.cards.length;
     }
   }
 };
@@ -54,8 +71,8 @@ export default {
 .deck {
   flex: 0 0 auto;
   position: relative;
-  width: var(--card-size);
-  height: calc(var(--card-size) * 1.3);
+  width: var(--card-width);
+  height: var(--card-height);
   border: 2px dashed var(--color-grayscale);
   transform: translateZ(0);
   transform-style: preserve-3d;

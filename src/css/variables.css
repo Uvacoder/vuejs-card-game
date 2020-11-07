@@ -17,6 +17,7 @@
   --ease-in-out: cubic-bezier(0.83, 0, 0.17, 1);
 
   /* Spacing */
+  --space-xs: 0.5rem;
   --space-sm: 0.75rem;
   --space: 1rem;
   --space-md: 2rem;
@@ -24,6 +25,7 @@
   /* Decorators */
   --border-size: 2px;
   --border-color: var(--color-primary);
-  --card-size: calc(350px - var(--space) * 2);
+  --card-width: calc(350px - var(--space) * 2);
+  --card-height: calc(var(--card-width) * 1.4);
   --shadow: rgba(0, 0, 0, 0.2) 0 2px 0;
 }
