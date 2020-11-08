@@ -25,7 +25,7 @@
       >
         {{ buttonText }}
       </button>
-      <button class="button icon" @click="toggleActiveView">
+      <button class="button icon" :disabled="disabledActiveViewButton" @click="toggleActiveView">
         <svg style="width:24px;height:24px" viewBox="0 0 24 24">
           <path
             v-if="showActiveView"
@@ -84,6 +84,10 @@ export default {
 
     disabledButton() {
       return this.activeCards.length == this.cards.length;
+    },
+
+    disabledActiveViewButton() {
+      return this.activeCards.length <= 1;
     }
   },
 

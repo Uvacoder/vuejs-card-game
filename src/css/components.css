@@ -12,6 +12,7 @@
 }
 
 .button:disabled {
+  color: var(--color-grayscale);
   border-color: var(--color-grayscale);
   border-style: dashed;
   background-color: transparent;
@@ -21,7 +22,6 @@
 .button:active,
 .button:disabled {
   transform: translateY(2px);
-  color: inherit;
   box-shadow: none;
 }
 
