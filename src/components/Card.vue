@@ -6,8 +6,11 @@
 
     <div v-if="lootCard" class="player-select">
       <select>
-        <option v-for="(player, index) in players" :key="index">
-          Party Member {{ index + 1 }}
+        <option value="" disabled selected>
+          Select a party member...
+        </option>
+        <option v-for="(player, index) in players" :key="index" :value="player">
+          {{ player }}
         </option>
       </select>
     </div>
@@ -21,7 +24,7 @@ export default {
     description: String,
     image: String,
     type: String,
-    players: Number
+    players: Array
   },
 
   computed: {
@@ -30,7 +33,7 @@ export default {
     },
 
     lootCard() {
-      return this.type !== "Encounter";
+      return this.players.length > 1 && this.type !== "Encounter";
     }
   }
 };

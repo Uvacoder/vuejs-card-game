@@ -1,5 +1,6 @@
 /* Button */
 .button {
+  display: flex;
   padding: var(--space-sm) var(--space-md);
   background-color: var(--color-secondary);
   border: var(--border-size) solid var(--border-color);
@@ -9,6 +10,10 @@
   cursor: pointer;
   box-shadow: var(--shadow);
   touch-action: manipulation;
+}
+
+.button > :not(:last-child) {
+  margin-right: var(--space-sm);
 }
 
 .button:disabled {

@@ -1,9 +1,12 @@
 <template>
   <header class="header">
-    <button class="button secondary" title="Start a new game" @click="startNewQuest">
-      New Quest
-    </button>
-    <button class="button secondary icon" title="Open settings" @click="toggleSettingsDisplay">
+    <button
+      class="button secondary"
+      title="Start a new game"
+      :disabled="settings"
+      @click="setupNewQuest"
+    >
+      <span>Start New Quest</span>
       <svg style="width:24px;height:24px" viewBox="0 0 24 24">
         <path
           fill="currentColor"
@@ -15,13 +18,8 @@
   <main class="main">
     <transition name="fade" mode="out-in">
       <div v-if="settings" class="settings u-flow">
-        <Stepper
-          id="players"
-          label="How many are in the party?"
-          :value="players"
-          @update="updatePlayers"
-        />
-        <button class="button" @click="toggleSettingsDisplay">
+        <Players :players="players" @update-players="updatePlayers" />
+        <button class="button start" @click="startNewQuest">
           Submit
         </button>
       </div>
@@ -38,18 +36,18 @@
 
 <script>
 import Deck from "./components/Deck.vue";
-import Stepper from "./components/Stepper.vue";
+import Players from "./components/Players.vue";
 
 export default {
   name: "App",
-  components: { Deck, Stepper },
+  components: { Deck, Players },
 
   data() {
     return {
       encounter: [],
       loot: [],
       notification: this.$notification.settings,
-      players: 1,
+      players: ["Party Member 1"],
       settings: true
     };
   },
@@ -93,21 +91,23 @@ export default {
     startNewQuest() {
       this.shuffleDeck(this.encounter);
       this.shuffleDeck(this.loot);
+      this.settings = false;
       this.notification = this.$notification.start;
     },
 
-    toggleSettingsDisplay() {
-      this.settings = !this.settings;
-
-      if (this.settings) {
-        this.notification = this.$notification.settings;
-      } else {
-        this.startNewQuest();
-      }
+    setupNewQuest() {
+      this.settings = true;
+      this.notification = this.$notification.settings;
     },
 
-    updatePlayers(value) {
-      this.players = value;
+    updatePlayers({ count, list }) {
+      if (count === this.players.length) {
+        return;
+      }
+      if (count < this.players.length) {
+        return this.players.pop();
+      }
+      return (this.players = [...list, "Party Member " + count]);
     }
   }
 };
@@ -150,8 +150,17 @@ export default {
 }
 
 .settings {
+  align-self: flex-start;
+  margin-top: var(--space-lg);
   padding: var(--padding);
   text-align: center;
+  max-width: 400px;
+  width: 100%;
+}
+
+.button.start {
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .decks {

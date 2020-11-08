@@ -61,8 +61,8 @@ export default {
       default: null
     },
     players: {
-      type: Number,
-      default: 1
+      type: Array,
+      default: null
     }
   },
   emits: ["draw"],

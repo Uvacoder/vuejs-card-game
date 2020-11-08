@@ -9,7 +9,7 @@ const app = createApp(App);
 
 app.config.globalProperties.$notification = {
   loading: "Fetching cards...",
-  settings: "Game settings",
+  settings: "Add party members",
   start: "Begin your quest",
   encounter: "New encounter!",
   loot: "Loot acquired!",
