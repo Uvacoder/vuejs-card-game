@@ -22,11 +22,11 @@
   border-style: dashed;
   background-color: transparent;
   cursor: not-allowed;
+  box-shadow: none;
 }
 
-.button:active,
-.button:disabled {
-  transform: translateY(2px);
+.button:active {
+  transform: translateY(1px);
   box-shadow: none;
 }
 
