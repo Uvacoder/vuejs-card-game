@@ -65,9 +65,17 @@ export default {
 }
 
 .player-input {
+  appearance: none;
   width: 100%;
   padding: var(--space-sm);
   font-size: inherit;
   font-family: inherit;
+  border: var(--border-size) solid var(--border-color);
+  box-shadow: inset rgba(0, 0, 0, 0.1) 3px 3px;
+  border-radius: 0;
+}
+
+.player-input:focus {
+  box-shadow: none;
 }
 </style>
