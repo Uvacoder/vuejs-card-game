@@ -118,8 +118,8 @@ export default {
   --padding: var(--space-md);
 
   display: grid;
-  grid-template-rows: auto 1fr;
-  min-height: 100vh;
+  grid-template-rows: auto 1fr auto;
+  min-height: 100%;
   overflow: hidden;
 }
 
@@ -159,11 +159,6 @@ export default {
   display: flex;
   margin: 0 auto;
   padding: var(--padding);
-  scroll-snap-type: x mandatory;
-}
-
-.decks > * {
-  scroll-snap-align: center;
 }
 
 .decks > * + * {

@@ -65,6 +65,7 @@ export default {
   align-items: center;
   justify-content: center;
   width: 100%;
+  color: var(--color-primary);
   background-color: white;
   overflow: hidden;
 }

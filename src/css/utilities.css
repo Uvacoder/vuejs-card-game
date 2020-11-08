@@ -5,6 +5,11 @@
   overflow: scroll;
   overscroll-behavior-x: contain;
   scrollbar-width: none;
+  scroll-snap-type: x mandatory;
+}
+
+.u-scroll-x > * {
+  scroll-snap-align: center;
 }
 
 .u-scroll-x::-webkit-scrollbar {

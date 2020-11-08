@@ -6,7 +6,7 @@
   --color-background: white;
 
   /* Fonts */
-  --font-primary: monospace;
+  --font-primary: system-ui;
 
   /* Transitions/Animations */
   --duration-sm: 150ms;
