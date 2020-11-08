@@ -75,7 +75,8 @@ export default {
 
   computed: {
     activeCards() {
-      return this.cards.filter(card => card.active);
+      const cards = this.cards.filter(card => card.active);
+      return this.showActiveView ? cards.reverse() : cards;
     },
 
     buttonText() {
