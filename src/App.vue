@@ -6,7 +6,7 @@
       :disabled="settings"
       @click="setupNewQuest"
     >
-      <span>Start New Quest</span>
+      <span>New Quest</span>
       <svg style="width:24px;height:24px" viewBox="0 0 24 24">
         <path
           fill="currentColor"
@@ -20,7 +20,7 @@
       <div v-if="settings" class="settings u-flow">
         <Players :players="players" @update-players="updatePlayers" />
         <button class="button start" @click="startNewQuest">
-          Submit
+          Start
         </button>
       </div>
       <div v-else class="decks u-scroll-x">
