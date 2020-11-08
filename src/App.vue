@@ -47,7 +47,7 @@ export default {
       encounter: [],
       loot: [],
       notification: this.$notification.settings,
-      players: ["Party Member 1"],
+      players: [`${this.$defaultPlayerName} 1`],
       settings: true
     };
   },
@@ -107,7 +107,7 @@ export default {
       if (count < this.players.length) {
         return this.players.pop();
       }
-      return (this.players = [...list, "Party Member " + count]);
+      return (this.players = [...list, `${this.$defaultPlayerName} ${count}`]);
     }
   }
 };

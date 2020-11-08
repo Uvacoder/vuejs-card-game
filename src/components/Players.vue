@@ -12,6 +12,8 @@
       v-model="list[index]"
       class="player-input"
       type="text"
+      @focus="focusInput"
+      @blur="event => blurInput(event, index)"
     />
   </div>
 </template>
@@ -37,6 +39,18 @@ export default {
   },
 
   methods: {
+    blurInput(event, index) {
+      if (event.target.value.length > 0) {
+        return;
+      }
+
+      this.list[index] = `${this.$defaultPlayerName} ${index + 1}`;
+    },
+
+    focusInput(e) {
+      return e.target.setSelectionRange(0, e.target.value.length);
+    },
+
     updatePlayers(count) {
       this.$emit("update-players", { count, list: this.list });
     }
