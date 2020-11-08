@@ -90,15 +90,18 @@ export default {
 .player-select {
   position: relative;
   width: 100%;
+  border-top: 2px solid var(--color-primary);
+  background-color: var(--color-secondary);
 }
 
 .player-select select {
+  --margin: 3px;
   appearance: none;
-  background-color: var(--color-secondary);
   border: none;
-  border-top: 2px solid var(--color-primary);
+  background-color: transparent;
   padding: 0 1em 0 0;
-  width: 100%;
+  margin: var(--margin);
+  width: calc(100% - var(--margin) * 2);
   font-family: inherit;
   font-size: inherit;
   cursor: inherit;

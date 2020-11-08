@@ -27,3 +27,7 @@
 .button.secondary {
   background-color: var(--color-background);
 }
+
+.button.icon {
+  padding: var(--space-sm) var(--space);
+}
