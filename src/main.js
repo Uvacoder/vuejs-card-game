@@ -18,4 +18,6 @@ app.config.globalProperties.$notification = {
   error: "There was an issue assembling the decks :("
 };
 
+app.config.globalProperties.$defaultPlayerName = "Party Member";
+
 app.mount("#app");
