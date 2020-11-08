@@ -20,10 +20,10 @@
       <button
         v-if="!showActiveView"
         class="button"
-        :disabled="disabledButton"
+        :disabled="disabledDrawButton"
         @click="$emit('draw', id)"
       >
-        {{ buttonText }}
+        {{ drawButtonText }}
       </button>
       <button class="button icon" :disabled="disabledActiveViewButton" @click="toggleActiveView">
         <svg style="width:24px;height:24px" viewBox="0 0 24 24">
@@ -79,11 +79,11 @@ export default {
       return this.showActiveView ? cards.reverse() : cards;
     },
 
-    buttonText() {
-      return this.disabledButton ? "Empty" : "Draw";
+    drawButtonText() {
+      return this.disabledDrawButton ? "Empty" : "Draw";
     },
 
-    disabledButton() {
+    disabledDrawButton() {
       return this.activeCards.length == this.cards.length;
     },
 
