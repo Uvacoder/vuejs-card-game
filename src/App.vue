@@ -151,7 +151,7 @@ export default {
 
 .settings {
   align-self: flex-start;
-  margin-top: var(--space-lg);
+  margin: var(--space-lg) 0;
   padding: var(--padding);
   text-align: center;
   max-width: 400px;

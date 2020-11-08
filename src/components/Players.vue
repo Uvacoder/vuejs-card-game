@@ -12,6 +12,7 @@
       v-model="list[index]"
       class="player-input"
       type="text"
+      spellcheck="false"
       @focus="focusInput"
       @blur="event => blurInput(event, index)"
     />
