@@ -123,6 +123,10 @@ export default {
   border: 2px dashed var(--color-grayscale);
 }
 
+.deck:focus-within {
+  z-index: 100;
+}
+
 .deck-name {
   color: var(--color-grayscale);
   text-transform: capitalize;
