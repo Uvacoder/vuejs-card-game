@@ -5,7 +5,7 @@
     <div class="description">{{ description }}</div>
 
     <div v-if="lootCard" class="player-select">
-      <select>
+      <select :disabled="disabled">
         <option value="" disabled selected>
           Select a party member...
         </option>
@@ -24,7 +24,8 @@ export default {
     description: String,
     image: String,
     type: String,
-    players: Array
+    players: Array,
+    disabled: Boolean
   },
 
   computed: {

@@ -1,31 +1,38 @@
 <template>
-  <div :id="id" :class="{ 'active-view': showActiveView }" class="deck-container u-flow">
-    <div :class="[showActiveView ? 'u-scroll-x' : 'u-flex-center']" class="deck">
+  <div :id="id" class="deck-container u-flow">
+    <div :class="{ 'has-active-view': showActiveView }" class="deck u-flex-center">
       <div class="deck-name">
         {{ id }}
       </div>
-      <transition-group name="card">
-        <Card
-          v-for="({ type, image, description }, index) in activeCards"
-          :key="index"
-          :type="type"
-          :image="image"
-          :description="description"
-          :players="players"
-          class="card"
-        />
-      </transition-group>
+      <div :class="{ 'active-view u-scroll-x': showActiveView }" class="view">
+        <transition-group name="card">
+          <Card
+            v-for="({ type, image, description }, index) in activeCards"
+            :key="index"
+            :type="type"
+            :image="image"
+            :description="description"
+            :players="players"
+            :disabled="!showActiveView && index !== activeCards.length - 1"
+            :style="`--i: ${index}`"
+            class="card"
+          />
+        </transition-group>
+      </div>
     </div>
     <div class="controls">
       <button
-        v-if="!showActiveView"
         class="button"
-        :disabled="disabledDrawButton"
+        :disabled="disabledDrawButton || showActiveView || disableControls"
         @click="$emit('draw', id)"
       >
         {{ drawButtonText }}
       </button>
-      <button class="button icon" :disabled="disabledActiveViewButton" @click="toggleActiveView">
+      <button
+        class="button icon"
+        :disabled="disabledActiveViewButton || disableControls"
+        @click="toggleActiveView"
+      >
         <svg style="width:24px;height:24px" viewBox="0 0 24 24">
           <path
             v-if="showActiveView"
@@ -60,12 +67,13 @@ export default {
       type: Array,
       default: null
     },
+    disableControls: Boolean,
     players: {
       type: Array,
       default: null
     }
   },
-  emits: ["draw"],
+  emits: ["draw", "show-active-view"],
 
   data() {
     return {
@@ -75,8 +83,7 @@ export default {
 
   computed: {
     activeCards() {
-      const cards = this.cards.filter(card => card.active);
-      return this.showActiveView ? cards.reverse() : cards;
+      return this.cards.filter(card => card.active);
     },
 
     drawButtonText() {
@@ -94,7 +101,8 @@ export default {
 
   methods: {
     toggleActiveView() {
-      return (this.showActiveView = !this.showActiveView);
+      this.showActiveView = !this.showActiveView;
+      this.$emit("show-active-view", this.showActiveView, this.id);
     }
   }
 };
@@ -121,9 +129,11 @@ export default {
 }
 
 .card {
+  order: calc(var(--i) * -1);
   position: absolute;
   top: -2px;
   left: -2px;
+  transition: transform var(--duration-md) var(--ease-out);
 }
 
 .card-enter-active {
@@ -142,29 +152,22 @@ export default {
   z-index: 1;
 }
 
+.deck.has-active-view {
+  position: unset;
+}
+
 .active-view {
-  position: fixed;
-  top: 0;
+  position: absolute;
+  top: calc(var(--space) * -1);
   left: 0;
   display: flex;
-  justify-content: center;
+  padding: var(--space-md) var(--space);
   margin: 0;
-  height: 100%;
-  width: 100%;
-  overflow-x: auto;
-  background-color: var(--color-background);
+  min-width: 100%;
   z-index: 100;
 }
 
-.active-view .deck {
-  width: auto;
-  min-width: 100%;
-  height: auto;
-  border-color: transparent;
-  padding-left: var(--space);
-}
-
-.active-view .deck::after {
+.view::after {
   content: "";
   display: block;
   flex: 0 0 var(--space);
@@ -175,14 +178,7 @@ export default {
   position: relative;
   top: unset;
   left: unset;
-  margin-right: var(--space);
-}
-
-.active-view .card:last-child {
-  margin-right: 0;
-}
-
-.active-view .deck-name {
-  display: none;
+  margin: 0 var(--space-xs);
+  box-shadow: rgba(0, 0, 0, 0.1) 4px 4px 0;
 }
 </style>

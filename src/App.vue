@@ -3,7 +3,7 @@
     <button
       class="button secondary"
       title="Start a new game"
-      :disabled="settings"
+      :disabled="showSettings"
       @click="setupNewQuest"
     >
       <span>New Quest</span>
@@ -17,15 +17,30 @@
   </header>
   <main class="main">
     <transition name="fade" mode="out-in">
-      <div v-if="settings" class="settings u-flow">
+      <div v-if="showSettings" class="settings u-flow">
         <Players :players="players" @update-players="updatePlayers" />
         <button class="button start" @click="startNewQuest">
           Start
         </button>
       </div>
       <div v-else class="decks u-scroll-x">
-        <Deck id="encounter" @draw="drawCard" :players="players" :cards="encounter" />
-        <Deck id="loot" @draw="drawCard" :players="players" :cards="loot" />
+        <Deck
+          id="encounter"
+          :disableControls="showActiveView && showActiveViewId !== 'encounter'"
+          :players="players"
+          :cards="encounter"
+          @draw="drawCard"
+          @show-active-view="handleActiveView"
+        />
+        <Deck
+          id="loot"
+          :disableControls="showActiveView && showActiveViewId !== 'loot'"
+          :players="players"
+          :cards="loot"
+          :active="showActiveView && showActiveViewId"
+          @draw="drawCard"
+          @show-active-view="handleActiveView"
+        />
       </div>
     </transition>
   </main>
@@ -48,7 +63,9 @@ export default {
       loot: [],
       notification: this.$notification.settings,
       players: [`${this.$defaultPlayerName} 1`],
-      settings: true
+      showSettings: true,
+      showActiveView: false,
+      showActiveViewId: ""
     };
   },
 
@@ -88,16 +105,21 @@ export default {
       this.deactivateDeck(deck);
     },
 
+    setupNewQuest() {
+      this.showSettings = true;
+      this.notification = this.$notification.settings;
+    },
+
+    handleActiveView(active, id) {
+      this.showActiveViewId = id;
+      this.showActiveView = active;
+    },
+
     startNewQuest() {
       this.shuffleDeck(this.encounter);
       this.shuffleDeck(this.loot);
-      this.settings = false;
+      this.showSettings = false;
       this.notification = this.$notification.start;
-    },
-
-    setupNewQuest() {
-      this.settings = true;
-      this.notification = this.$notification.settings;
     },
 
     updatePlayers({ count, list }) {
@@ -107,7 +129,7 @@ export default {
       if (count < this.players.length) {
         return this.players.pop();
       }
-      return (this.players = [...list, `${this.$defaultPlayerName} ${count}`]);
+      this.players = [...list, `${this.$defaultPlayerName} ${count}`];
     }
   }
 };
@@ -167,11 +189,17 @@ export default {
   position: relative;
   display: flex;
   margin: 0 auto;
+  width: 100%;
   padding: var(--padding);
 }
 
-.decks > * + * {
+.decks > :first-child {
+  margin-left: auto;
+}
+
+.decks > :last-child {
   margin-left: var(--space);
+  margin-right: auto;
 }
 
 .decks::after {
