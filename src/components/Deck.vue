@@ -53,6 +53,7 @@
 </template>
 
 <script>
+import { computed, reactive, toRefs } from "vue";
 import Card from "./Card.vue";
 
 export default {
@@ -67,43 +68,44 @@ export default {
       type: Array,
       default: null
     },
-    disableControls: Boolean,
     players: {
       type: Array,
       default: null
-    }
+    },
+    disableControls: Boolean
   },
   emits: ["draw", "show-active-view"],
 
-  data() {
-    return {
-      showActiveView: false
+  setup(props, { emit }) {
+    const state = reactive({
+      showActiveView: false,
+
+      activeCards: computed(() => {
+        return props.cards.filter(card => card.active);
+      }),
+
+      disabledActiveViewButton: computed(() => {
+        return state.activeCards.length <= 1;
+      }),
+
+      disabledDrawButton: computed(() => {
+        return state.activeCards.length == props.cards.length;
+      }),
+
+      drawButtonText: computed(() => {
+        return state.disabledDrawButton ? "Empty" : "Draw";
+      })
+    });
+
+    const toggleActiveView = () => {
+      state.showActiveView = !state.showActiveView;
+      emit("show-active-view", state.showActiveView, props.id);
     };
-  },
 
-  computed: {
-    activeCards() {
-      return this.cards.filter(card => card.active);
-    },
-
-    drawButtonText() {
-      return this.disabledDrawButton ? "Empty" : "Draw";
-    },
-
-    disabledDrawButton() {
-      return this.activeCards.length == this.cards.length;
-    },
-
-    disabledActiveViewButton() {
-      return this.activeCards.length <= 1;
-    }
-  },
-
-  methods: {
-    toggleActiveView() {
-      this.showActiveView = !this.showActiveView;
-      this.$emit("show-active-view", this.showActiveView, this.id);
-    }
+    return {
+      toggleActiveView,
+      ...toRefs(state)
+    };
   }
 };
 </script>
@@ -123,7 +125,7 @@ export default {
   border: 2px dashed var(--color-grayscale);
 }
 
-.deck:focus-within {
+.deck-container:focus-within {
   z-index: 100;
 }
 

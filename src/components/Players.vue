@@ -20,6 +20,7 @@
 </template>
 
 <script>
+import { computed, inject, reactive, toRefs } from "vue";
 import Stepper from "../components/Stepper.vue";
 
 export default {
@@ -28,33 +29,40 @@ export default {
   props: {
     players: {
       type: Array,
-      default: null
+      default: () => []
     }
   },
   emits: ["update-players"],
 
-  computed: {
-    list() {
-      return this.players;
-    }
-  },
+  setup(props, { emit }) {
+    const defaultPlayerName = inject("defaultPlayerName");
 
-  methods: {
-    blurInput(event, index) {
+    const state = reactive({
+      list: computed(() => props.players)
+    });
+
+    const blurInput = (event, index) => {
       if (event.target.value.length > 0) {
         return;
       }
+      state.list[index] = `${defaultPlayerName} ${index + 1}`;
+    };
 
-      this.list[index] = `${this.$defaultPlayerName} ${index + 1}`;
-    },
+    const focusInput = event => event.target.select();
 
-    focusInput(e) {
-      return e.target.setSelectionRange(0, e.target.value.length);
-    },
+    const updatePlayers = count => {
+      emit("update-players", {
+        count,
+        list: state.list
+      });
+    };
 
-    updatePlayers(count) {
-      this.$emit("update-players", { count, list: this.list });
-    }
+    return {
+      blurInput,
+      focusInput,
+      updatePlayers,
+      ...toRefs(state)
+    };
   }
 };
 </script>

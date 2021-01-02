@@ -44,93 +44,101 @@
       </div>
     </transition>
   </main>
-  <footer class="footer">
-    {{ notification }}
-  </footer>
+  <footer class="footer">{{ notification }}</footer>
 </template>
 
 <script>
+import { inject, onMounted, reactive, toRefs } from "vue";
 import Deck from "./components/Deck.vue";
 import Players from "./components/Players.vue";
 
 export default {
   name: "App",
   components: { Deck, Players },
+  setup() {
+    const notification = inject("notification");
+    const defaultPlayerName = inject("defaultPlayerName");
 
-  data() {
-    return {
+    const state = reactive({
       encounter: [],
       loot: [],
-      notification: this.$notification.settings,
-      players: [`${this.$defaultPlayerName} 1`],
+      notification: notification.settings,
+      players: [`${defaultPlayerName} 1`],
       showSettings: true,
       showActiveView: false,
       showActiveViewId: ""
-    };
-  },
+    });
 
-  mounted() {
-    this.fetchCardData();
-  },
-
-  methods: {
-    async fetchCardData() {
+    const fetchCardData = async () => {
       try {
         const response = await fetch("https://assets.codepen.io/225363/cardsTestData.json");
         const data = await response.json();
         const cards = await data.map(card => Object.assign(card, { active: false }));
 
-        this.encounter = cards.filter(({ type }) => type === "Encounter");
-        this.loot = cards.filter(({ type }) => type !== "Encounter");
+        state.encounter = cards.filter(({ type }) => type === "Encounter");
+        state.loot = cards.filter(({ type }) => type !== "Encounter");
       } catch (error) {
-        this.notification = this.$notification.error;
+        state.notification = notification.error;
       }
-    },
+    };
 
-    deactivateDeck(deck) {
+    const deactivateDeck = deck => {
       deck.forEach(card => (card.active = false));
-    },
+    };
 
-    drawCard(type) {
-      this[type].find(card => {
+    const drawCard = type => {
+      state[type].find(card => {
         if (!card.active) {
           return (card.active = true);
         }
       });
-      this.notification = this.$notification[type];
-    },
+      state.notification = notification[type];
+    };
 
-    shuffleDeck(deck) {
+    const shuffleDeck = deck => {
       deck.sort(() => Math.random() - 0.5);
-      this.deactivateDeck(deck);
-    },
+      deactivateDeck(deck);
+    };
 
-    setupNewQuest() {
-      this.showSettings = true;
-      this.notification = this.$notification.settings;
-    },
+    const setupNewQuest = () => {
+      state.showSettings = true;
+      state.notification = notification.settings;
+    };
 
-    handleActiveView(active, id) {
-      this.showActiveViewId = id;
-      this.showActiveView = active;
-    },
+    const handleActiveView = (activeView, id) => {
+      state.showActiveView = activeView;
+      state.showActiveViewId = id;
+    };
 
-    startNewQuest() {
-      this.shuffleDeck(this.encounter);
-      this.shuffleDeck(this.loot);
-      this.showSettings = false;
-      this.notification = this.$notification.start;
-    },
+    const startNewQuest = () => {
+      shuffleDeck(state.encounter);
+      shuffleDeck(state.loot);
+      state.showSettings = false;
+      state.notification = notification.start;
+    };
 
-    updatePlayers({ count, list }) {
-      if (count === this.players.length) {
+    const updatePlayers = ({ count, list }) => {
+      if (count === state.players.length) {
         return;
       }
-      if (count < this.players.length) {
-        return this.players.pop();
+      if (count < state.players.length) {
+        return state.players.pop();
       }
-      this.players = [...list, `${this.$defaultPlayerName} ${count}`];
-    }
+      state.players = [...list, `${defaultPlayerName} ${count}`];
+    };
+
+    onMounted(() => fetchCardData());
+
+    return {
+      deactivateDeck,
+      drawCard,
+      handleActiveView,
+      setupNewQuest,
+      shuffleDeck,
+      startNewQuest,
+      updatePlayers,
+      ...toRefs(state)
+    };
   }
 };
 </script>

@@ -6,7 +6,7 @@
 
     <div v-if="lootCard" class="player-select">
       <select :disabled="disabled">
-        <option value="" disabled selected>
+        <option disabled selected>
           Select a party member...
         </option>
         <option v-for="(player, index) in players" :key="index" :value="player">
@@ -18,24 +18,43 @@
 </template>
 
 <script>
+import { computed, reactive, toRefs } from "vue";
+
 export default {
   name: "Card",
   props: {
-    description: String,
-    image: String,
-    type: String,
-    players: Array,
+    description: {
+      type: String,
+      default: null
+    },
+    image: {
+      type: String,
+      default: null
+    },
+    type: {
+      type: String,
+      default: null
+    },
+    players: {
+      type: Array,
+      default: () => []
+    },
     disabled: Boolean
   },
+  setup(props) {
+    const state = reactive({
+      dataType: computed(() => {
+        return props.type.replace(/\s+/g, "-").toLowerCase();
+      }),
 
-  computed: {
-    dataType() {
-      return this.type.replace(/\s+/g, "-").toLowerCase();
-    },
+      lootCard: computed(() => {
+        return props.players.length > 1 && props.type !== "Encounter";
+      })
+    });
 
-    lootCard() {
-      return this.players.length > 1 && this.type !== "Encounter";
-    }
+    return {
+      ...toRefs(state)
+    };
   }
 };
 </script>
