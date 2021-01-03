@@ -56,12 +56,11 @@ export default {
   setup() {
     const notification = inject("notification");
     const defaultPlayerName = inject("defaultPlayerName");
+
     const viewDeck = reactive({
       show: false,
       id: ""
     });
-
-    provide("viewDeck", viewDeck);
 
     const state = reactive({
       encounter: [],
@@ -124,6 +123,8 @@ export default {
       }
       state.players = [...list, `${defaultPlayerName} ${count}`];
     };
+
+    provide("viewDeck", viewDeck);
 
     onMounted(() => fetchCardData());
 
