@@ -1,10 +1,10 @@
 <template>
   <div :id="id" class="deck-container u-flow">
-    <div :class="{ 'has-active-view': showActiveView }" class="deck u-flex-center">
+    <div :class="{ 'active-deck': isActiveDeck }" class="deck u-flex-center">
       <div class="deck-name">
         {{ id }}
       </div>
-      <div :class="{ 'active-view u-scroll-x': showActiveView }" class="view">
+      <div :class="{ 'u-scroll-x': isActiveDeck }" class="view">
         <transition-group name="card">
           <Card
             v-for="({ type, image, description }, index) in activeCards"
@@ -13,7 +13,7 @@
             :image="image"
             :description="description"
             :players="players"
-            :disabled="!showActiveView && index !== activeCards.length - 1"
+            :disabled="!isActiveDeck && index !== activeCards.length - 1"
             :style="`--i: ${index}`"
             class="card"
           />
@@ -23,7 +23,7 @@
     <div class="controls">
       <button
         class="button"
-        :disabled="disabledDrawButton || showActiveView || disableControls"
+        :disabled="disabledDrawButton || disableControls || isActiveDeck"
         @click="$emit('draw', id)"
       >
         {{ drawButtonText }}
@@ -35,7 +35,7 @@
       >
         <svg style="width:24px;height:24px" viewBox="0 0 24 24">
           <path
-            v-if="showActiveView"
+            v-if="isActiveDeck"
             class="icon-close"
             fill="currentColor"
             d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"
@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import { computed, reactive, toRefs } from "vue";
+import { computed, inject, reactive, toRefs } from "vue";
 import Card from "./Card.vue";
 
 export default {
@@ -74,11 +74,15 @@ export default {
     },
     disableControls: Boolean
   },
-  emits: ["draw", "show-active-view"],
+  emits: ["draw"],
 
   setup(props, { emit }) {
+    const viewDeck = inject("viewDeck");
+
     const state = reactive({
-      showActiveView: false,
+      isActiveDeck: computed(() => {
+        return viewDeck.show && viewDeck.id === props.id;
+      }),
 
       activeCards: computed(() => {
         return props.cards.filter(card => card.active);
@@ -98,11 +102,12 @@ export default {
     });
 
     const toggleActiveView = () => {
-      state.showActiveView = !state.showActiveView;
-      emit("show-active-view", state.showActiveView, props.id);
+      viewDeck.id = props.id;
+      viewDeck.show = !viewDeck.show;
     };
 
     return {
+      viewDeck,
       toggleActiveView,
       ...toRefs(state)
     };
@@ -123,6 +128,12 @@ export default {
   width: var(--card-width);
   height: var(--card-height);
   border: 2px dashed var(--color-grayscale);
+}
+
+.view::after {
+  content: "";
+  display: block;
+  flex: 0 0 var(--space);
 }
 
 .deck-container:focus-within {
@@ -158,11 +169,11 @@ export default {
   z-index: 1;
 }
 
-.deck.has-active-view {
+.active-deck {
   position: unset;
 }
 
-.active-view {
+.active-deck .view {
   position: absolute;
   top: calc(var(--space) * -1);
   left: 0;
@@ -173,13 +184,7 @@ export default {
   z-index: 100;
 }
 
-.view::after {
-  content: "";
-  display: block;
-  flex: 0 0 var(--space);
-}
-
-.active-view .card {
+.active-deck .card {
   flex: 0 0 auto;
   position: relative;
   top: unset;

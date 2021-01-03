@@ -26,20 +26,18 @@
       <div v-else class="decks u-scroll-x">
         <Deck
           id="encounter"
-          :disableControls="showActiveView && showActiveViewId !== 'encounter'"
+          :disableControls="viewDeck.show && viewDeck.id !== 'encounter'"
           :players="players"
           :cards="encounter"
           @draw="drawCard"
-          @show-active-view="handleActiveView"
         />
         <Deck
           id="loot"
-          :disableControls="showActiveView && showActiveViewId !== 'loot'"
+          :disableControls="viewDeck.show && viewDeck.id !== 'loot'"
           :players="players"
           :cards="loot"
-          :active="showActiveView && showActiveViewId"
+          :active="viewDeck.show && viewDeck.id"
           @draw="drawCard"
-          @show-active-view="handleActiveView"
         />
       </div>
     </transition>
@@ -48,7 +46,7 @@
 </template>
 
 <script>
-import { inject, onMounted, reactive, toRefs } from "vue";
+import { inject, provide, onMounted, reactive, toRefs } from "vue";
 import Deck from "./components/Deck.vue";
 import Players from "./components/Players.vue";
 
@@ -58,15 +56,19 @@ export default {
   setup() {
     const notification = inject("notification");
     const defaultPlayerName = inject("defaultPlayerName");
+    const viewDeck = reactive({
+      show: false,
+      id: ""
+    });
+
+    provide("viewDeck", viewDeck);
 
     const state = reactive({
       encounter: [],
       loot: [],
       notification: notification.settings,
       players: [`${defaultPlayerName} 1`],
-      showSettings: true,
-      showActiveView: false,
-      showActiveViewId: ""
+      showSettings: true
     });
 
     const fetchCardData = async () => {
@@ -101,13 +103,9 @@ export default {
     };
 
     const setupNewQuest = () => {
+      viewDeck.show = false;
       state.showSettings = true;
       state.notification = notification.settings;
-    };
-
-    const handleActiveView = (activeView, id) => {
-      state.showActiveView = activeView;
-      state.showActiveViewId = id;
     };
 
     const startNewQuest = () => {
@@ -132,11 +130,11 @@ export default {
     return {
       deactivateDeck,
       drawCard,
-      handleActiveView,
       setupNewQuest,
       shuffleDeck,
       startNewQuest,
       updatePlayers,
+      viewDeck,
       ...toRefs(state)
     };
   }
