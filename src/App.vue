@@ -62,11 +62,13 @@ export default {
       id: ""
     });
 
+    provide("viewDeck", viewDeck);
+
     const state = reactive({
       encounter: [],
       loot: [],
       notification: notification.settings,
-      players: [`${defaultPlayerName} 1`],
+      players: [defaultPlayerName],
       showSettings: true
     });
 
@@ -74,7 +76,9 @@ export default {
       try {
         const response = await fetch("https://assets.codepen.io/225363/cardsTestData.json");
         const data = await response.json();
-        const cards = await data.map(card => Object.assign(card, { active: false }));
+        const cards = await data.map(card => {
+          return { ...card, active: false };
+        });
 
         state.encounter = cards.filter(({ type }) => type === "Encounter");
         state.loot = cards.filter(({ type }) => type !== "Encounter");
@@ -123,8 +127,6 @@ export default {
       }
       state.players = [...list, `${defaultPlayerName} ${count}`];
     };
-
-    provide("viewDeck", viewDeck);
 
     onMounted(() => fetchCardData());
 
