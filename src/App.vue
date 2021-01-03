@@ -26,17 +26,16 @@
       <div v-else class="decks u-scroll-x">
         <Deck
           id="encounter"
-          :disableControls="viewDeck.show && viewDeck.id !== 'encounter'"
-          :players="players"
           :cards="encounter"
+          :disableControls="disableDeckControls('encounter')"
+          :players="players"
           @draw="drawCard"
         />
         <Deck
           id="loot"
-          :disableControls="viewDeck.show && viewDeck.id !== 'loot'"
-          :players="players"
           :cards="loot"
-          :active="viewDeck.show && viewDeck.id"
+          :disableControls="disableDeckControls('loot')"
+          :players="players"
           @draw="drawCard"
         />
       </div>
@@ -91,6 +90,10 @@ export default {
       deck.forEach(card => (card.active = false));
     };
 
+    const disableDeckControls = id => {
+      return viewDeck.show && viewDeck.id !== id;
+    };
+
     const drawCard = type => {
       state[type].find(card => {
         if (!card.active) {
@@ -132,6 +135,7 @@ export default {
 
     return {
       deactivateDeck,
+      disableDeckControls,
       drawCard,
       setupNewQuest,
       shuffleDeck,
