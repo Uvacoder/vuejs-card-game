@@ -13,7 +13,6 @@
             :image="image"
             :description="description"
             :players="players"
-            :disabled="!isActiveView && index !== activeCards.length - 1"
             :style="`--i: ${index}`"
             class="card"
           />
@@ -24,8 +23,8 @@
       <button class="button" :disabled="disableDrawButton" @click="$emit('draw', id)">
         {{ drawButtonText }}
       </button>
-      <button class="button icon" :disabled="disableViewDeckButton" @click="toggleViewDeck">
-        <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+      <button class="button button--icon" :disabled="disableViewDeckButton" @click="toggleViewDeck">
+        <svg class="icon" viewBox="0 0 24 24">
           <path
             v-if="viewDeck.show"
             class="icon-close"
@@ -59,17 +58,13 @@ export default {
     cards: {
       type: Array,
       default: null
-    },
-    players: {
-      type: Array,
-      default: null
-    },
-    disableControls: Boolean
+    }
   },
   emits: ["draw"],
 
   setup(props, { emit }) {
     const viewDeck = inject("viewDeck");
+    const players = inject("players");
 
     const state = reactive({
       isActiveView: computed(() => {
@@ -99,6 +94,7 @@ export default {
     };
 
     return {
+      players,
       viewDeck,
       toggleViewDeck,
       ...toRefs(state)

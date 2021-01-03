@@ -5,7 +5,7 @@
     <div class="description">{{ description }}</div>
 
     <div v-if="lootCard" class="player-select">
-      <select :disabled="disabled">
+      <select>
         <option disabled selected>
           Select a party member...
         </option>
@@ -38,8 +38,7 @@ export default {
     players: {
       type: Array,
       default: () => []
-    },
-    disabled: Boolean
+    }
   },
   setup(props) {
     const state = reactive({
