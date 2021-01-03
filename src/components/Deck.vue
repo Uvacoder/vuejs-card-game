@@ -1,10 +1,10 @@
 <template>
   <div :id="id" class="deck-container u-flow">
-    <div :class="{ 'active-deck': isActiveDeck }" class="deck u-flex-center">
+    <div :class="{ 'active-deck': isActiveView }" class="deck u-flex-center">
       <div class="deck-name">
         {{ id }}
       </div>
-      <div :class="{ 'u-scroll-x': isActiveDeck }" class="view">
+      <div :class="{ 'u-scroll-x': isActiveView }" class="view">
         <transition-group name="card">
           <Card
             v-for="({ type, image, description }, index) in activeCards"
@@ -13,7 +13,7 @@
             :image="image"
             :description="description"
             :players="players"
-            :disabled="!isActiveDeck && index !== activeCards.length - 1"
+            :disabled="!isActiveView && index !== activeCards.length - 1"
             :style="`--i: ${index}`"
             class="card"
           />
@@ -21,21 +21,13 @@
       </div>
     </div>
     <div class="controls">
-      <button
-        class="button"
-        :disabled="disabledDrawButton || disableControls || isActiveDeck"
-        @click="$emit('draw', id)"
-      >
+      <button class="button" :disabled="disableDrawButton" @click="$emit('draw', id)">
         {{ drawButtonText }}
       </button>
-      <button
-        class="button icon"
-        :disabled="disabledActiveViewButton || disableControls"
-        @click="toggleActiveView"
-      >
+      <button class="button icon" :disabled="disableViewDeckButton" @click="toggleViewDeck">
         <svg style="width:24px;height:24px" viewBox="0 0 24 24">
           <path
-            v-if="isActiveDeck"
+            v-if="viewDeck.show"
             class="icon-close"
             fill="currentColor"
             d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"
@@ -80,7 +72,7 @@ export default {
     const viewDeck = inject("viewDeck");
 
     const state = reactive({
-      isActiveDeck: computed(() => {
+      isActiveView: computed(() => {
         return viewDeck.show && viewDeck.id === props.id;
       }),
 
@@ -88,27 +80,27 @@ export default {
         return props.cards.filter(card => card.active);
       }),
 
-      disabledActiveViewButton: computed(() => {
-        return state.activeCards.length <= 1;
+      disableViewDeckButton: computed(() => {
+        return state.activeCards.length <= 1 || (viewDeck.show && viewDeck.id !== props.id);
       }),
 
-      disabledDrawButton: computed(() => {
-        return state.activeCards.length == props.cards.length;
+      disableDrawButton: computed(() => {
+        return state.activeCards.length == props.cards.length || viewDeck.show;
       }),
 
       drawButtonText: computed(() => {
-        return state.disabledDrawButton ? "Empty" : "Draw";
+        return state.activeCards.length == props.cards.length ? "Empty" : "Draw";
       })
     });
 
-    const toggleActiveView = () => {
+    const toggleViewDeck = () => {
       viewDeck.id = props.id;
       viewDeck.show = !viewDeck.show;
     };
 
     return {
       viewDeck,
-      toggleActiveView,
+      toggleViewDeck,
       ...toRefs(state)
     };
   }
