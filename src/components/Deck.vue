@@ -163,14 +163,15 @@ export default {
 }
 
 .is-active-view .view {
-  position: absolute;
-  top: calc(var(--space) * -1);
+  position: fixed;
+  top: 50%;
   left: 0;
   display: flex;
-  padding: var(--space-md) var(--space);
+  padding: var(--space);
   margin: 0;
   min-width: 100%;
   z-index: 100;
+  transform: translateY(calc(-50% - var(--space-md)));
 }
 
 .is-active-view .view::after {
