@@ -29,7 +29,7 @@
       </div>
     </transition>
   </main>
-  <footer class="footer">{{ notification }}</footer>
+  <footer class="footer">{{ appMessage }}</footer>
 </template>
 
 <script>
@@ -41,22 +41,23 @@ export default {
   name: "App",
   components: { Deck, Players },
   setup() {
-    const notification = inject("notification");
+    const message = inject("message");
     const defaultPlayerName = inject("defaultPlayerName");
     const players = ref([defaultPlayerName]);
+    const appMessage = ref(message.settings);
 
     const viewDeck = reactive({
       show: false,
-      id: ""
+      id: null
     });
 
     provide("viewDeck", viewDeck);
     provide("players", players);
+    provide("appMessage", appMessage);
 
     const state = reactive({
       encounter: [],
       loot: [],
-      notification: notification.settings,
       showSettings: true
     });
 
@@ -71,12 +72,8 @@ export default {
         state.encounter = cards.filter(({ type }) => type === "Encounter");
         state.loot = cards.filter(({ type }) => type !== "Encounter");
       } catch (error) {
-        state.notification = notification.error;
+        appMessage.value = message.error;
       }
-    };
-
-    const deactivateDeck = deck => {
-      deck.forEach(card => (card.active = false));
     };
 
     const drawCard = type => {
@@ -85,25 +82,25 @@ export default {
           return (card.active = true);
         }
       });
-      state.notification = notification[type];
+      appMessage.value = message[type];
     };
 
     const shuffleDeck = deck => {
+      deck.forEach(card => (card.active = false));
       deck.sort(() => Math.random() - 0.5);
-      deactivateDeck(deck);
     };
 
     const setupNewQuest = () => {
       viewDeck.show = false;
       state.showSettings = true;
-      state.notification = notification.settings;
+      appMessage.value = message.settings;
     };
 
     const startNewQuest = () => {
       shuffleDeck(state.encounter);
       shuffleDeck(state.loot);
       state.showSettings = false;
-      state.notification = notification.start;
+      appMessage.value = message.start;
     };
 
     const updatePlayers = ({ count, list }) => {
@@ -119,8 +116,8 @@ export default {
     onMounted(() => fetchCardData());
 
     return {
-      deactivateDeck,
       drawCard,
+      appMessage,
       players,
       setupNewQuest,
       shuffleDeck,
@@ -188,7 +185,8 @@ export default {
   display: flex;
   margin: 0 auto;
   width: 100%;
-  padding: var(--padding);
+  padding-top: var(--padding);
+  padding-bottom: var(--padding);
 }
 
 .decks > :first-child {
@@ -200,6 +198,7 @@ export default {
   margin-right: auto;
 }
 
+.decks::before,
 .decks::after {
   content: "";
   display: block;

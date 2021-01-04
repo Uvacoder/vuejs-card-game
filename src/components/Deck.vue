@@ -1,6 +1,6 @@
 <template>
   <div :id="id" class="deck-container u-flow">
-    <div :class="{ 'active-deck': isActiveView }" class="deck u-flex-center">
+    <div :class="{ 'is-active-view': isActiveView }" class="deck u-flex-center">
       <div class="deck-name">
         {{ id }}
       </div>
@@ -26,7 +26,7 @@
       <button class="button button--icon" :disabled="disableViewDeckButton" @click="toggleViewDeck">
         <svg class="icon" viewBox="0 0 24 24">
           <path
-            v-if="viewDeck.show"
+            v-if="isActiveView"
             class="icon-close"
             fill="currentColor"
             d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"
@@ -63,8 +63,10 @@ export default {
   emits: ["draw"],
 
   setup(props, { emit }) {
+    const message = inject("message");
     const viewDeck = inject("viewDeck");
     const players = inject("players");
+    const appMessage = inject("appMessage");
 
     const state = reactive({
       isActiveView: computed(() => {
@@ -88,9 +90,14 @@ export default {
       })
     });
 
+    const updateAppMessage = () => {
+      return viewDeck.show ? `Viewing ${viewDeck.id} cards` : message.continue;
+    };
+
     const toggleViewDeck = () => {
       viewDeck.id = props.id;
       viewDeck.show = !viewDeck.show;
+      appMessage.value = updateAppMessage();
     };
 
     return {
@@ -116,12 +123,6 @@ export default {
   width: var(--card-width);
   height: var(--card-height);
   border: 2px dashed var(--color-grayscale);
-}
-
-.view::after {
-  content: "";
-  display: block;
-  flex: 0 0 var(--space);
 }
 
 .deck-container:focus-within {
@@ -157,11 +158,11 @@ export default {
   z-index: 1;
 }
 
-.active-deck {
+.is-active-view {
   position: unset;
 }
 
-.active-deck .view {
+.is-active-view .view {
   position: absolute;
   top: calc(var(--space) * -1);
   left: 0;
@@ -172,7 +173,13 @@ export default {
   z-index: 100;
 }
 
-.active-deck .card {
+.is-active-view .view::after {
+  content: "";
+  display: block;
+  flex: 0 0 var(--space);
+}
+
+.is-active-view .card {
   flex: 0 0 auto;
   position: relative;
   top: unset;
