@@ -18,7 +18,7 @@
   <main class="main">
     <transition name="fade" mode="out-in">
       <div v-if="showSettings" class="settings u-flow">
-        <Players :players="players" @update-players="updatePlayers" />
+        <Players />
         <button class="button start" @click="startNewQuest">
           Start
         </button>
@@ -42,18 +42,13 @@ export default {
   components: { Deck, Players },
   setup() {
     const message = inject("message");
-    const defaultPlayerName = inject("defaultPlayerName");
-    const players = ref([defaultPlayerName]);
     const appMessage = ref(message.settings);
+    const players = ref(["Party Member 1"]);
+    const viewDeck = reactive({ show: false, id: null });
 
-    const viewDeck = reactive({
-      show: false,
-      id: null
-    });
-
-    provide("viewDeck", viewDeck);
-    provide("players", players);
     provide("appMessage", appMessage);
+    provide("players", players);
+    provide("viewDeck", viewDeck);
 
     const state = reactive({
       encounter: [],
@@ -103,16 +98,6 @@ export default {
       appMessage.value = message.start;
     };
 
-    const updatePlayers = ({ count, list }) => {
-      if (count === players.value.length) {
-        return;
-      }
-      if (count < players.value.length) {
-        return players.value.pop();
-      }
-      players.value = [...list, `${defaultPlayerName} ${count}`];
-    };
-
     onMounted(() => fetchCardData());
 
     return {
@@ -122,7 +107,6 @@ export default {
       setupNewQuest,
       shuffleDeck,
       startNewQuest,
-      updatePlayers,
       viewDeck,
       ...toRefs(state)
     };

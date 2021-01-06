@@ -19,6 +19,4 @@ app.provide("message", {
   error: "There was an issue assembling the decks :("
 });
 
-app.provide("defaultPlayerName", "Party Member");
-
 app.mount("#app");

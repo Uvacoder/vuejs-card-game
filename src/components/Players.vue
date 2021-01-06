@@ -7,9 +7,9 @@
       @update="updatePlayers"
     />
     <input
-      v-for="(player, index) in list"
+      v-for="(player, index) in players"
       :key="index"
-      v-model="list[index]"
+      v-model="players[index]"
       class="player-input"
       type="text"
       spellcheck="false"
@@ -26,42 +26,34 @@ import Stepper from "../components/Stepper.vue";
 export default {
   name: "Players",
   components: { Stepper },
-  props: {
-    players: {
-      type: Array,
-      default: () => []
-    }
-  },
-  emits: ["update-players"],
 
-  setup(props, { emit }) {
-    const defaultPlayerName = inject("defaultPlayerName");
-
-    const state = reactive({
-      list: computed(() => props.players)
-    });
+  setup(props) {
+    const players = inject("players");
 
     const blurInput = (event, index) => {
       if (event.target.value.length > 0) {
         return;
       }
-      state.list[index] = `${defaultPlayerName} ${index + 1}`;
+      players.value[index] = `Party Member ${index + 1}`;
     };
 
     const focusInput = event => event.target.select();
 
     const updatePlayers = count => {
-      emit("update-players", {
-        count,
-        list: state.list
-      });
+      if (count === players.value.length) {
+        return;
+      }
+      if (count < players.value.length) {
+        return players.value.pop();
+      }
+      players.value = [...players.value, `Party Member ${count}`];
     };
 
     return {
       blurInput,
       focusInput,
-      updatePlayers,
-      ...toRefs(state)
+      players,
+      updatePlayers
     };
   }
 };
